@@ -1,0 +1,81 @@
+## 33. Search in Rotated Sorted Array
+
+题目链接: https://leetcode.com/problems/search-in-rotated-sorted-array/
+
+### 问题
+输入：旋转数组arr，目标值target
+
++ 旋转数组，可理解为将有序数组的前半部分拼接到后半部分形成的数组，如[4,5,6,7,0,1,2]，进一步可将其拆分为左右两个有序数组，且左边的有序数组均大于右边的有序数组。
+
+输出：target在arr中的位置，若arr中不存在该值，则输出-1
+
+要求：时间复杂度为O(log n)
+
+### 解题思路
+由于该数组部分有序，且要求的时间复杂度为O(log n)，故考虑**二分搜索**。
+
+思路1： 直接进行二分求解找到target所在的位置 => 由于无法判断mid所在的是左侧/右侧数组，因此无法对start和end进行修正（这是最初的想法）。
+
+思路2：考虑先用二分搜索找到两个数组的分界点（pivot, 该数组中最大值所在的位置），再对两个数组分别进行二分搜索，找到目标值。
+
+
+### 代码
+
+```Python
+class Solution(object):
+    def binarySearch(self, nums, start, end, target):
+        while start <= end:
+            mid = start + ((end - start) >> 1)  # 注意这里的括号不能省！
+            if nums[mid] == target:
+                return mid
+            elif nums[mid] < target:
+                start = mid + 1
+            else:
+                end = mid - 1
+        return -1
+        
+    def search(self, nums, target):
+        if len(nums) < 1:               # 注意对边界值进行处理！！
+            return -1
+            
+        # 这里直接用Python内置函数搜索最大值,复杂度为O(n)，并不满足要求
+        pivot = nums.index(max(nums))   
+        end = len(nums) - 1
+        
+        if nums[pivot] == nums[end]:
+            return self.binarySearch(nums, 0, end, target)
+        else:
+            idx1 = self.binarySearch(nums, 0, pivot, target)
+            idx2 = self.binarySearch(nums, pivot+1, end, target)
+            return max([idx1, idx2])
+```
+
+### 其他方案
+
+二分查找，不断缩小查找范围，根据不同的情况下，不断判断target可能存在的区间，逐渐减小搜索范围
+```Python
+def search(self, nums, target):
+    low = 0
+    high = len(nums) - 1
+    while low <= high:
+        mid = (low + high) // 2
+        if nums[mid] == target:
+            return mid
+        elif nums[mid] <= nums[high]:  # mid to high is sorted, binary search in this range
+            if nums[mid] < target <= nums[high]:
+                low = mid + 1
+            else:
+                high = mid - 1
+        elif nums[mid] >= nums[low]:  # low to mid is sorted, binary search in this range
+            if nums[low] <= target < nums[mid]:
+                high = mid - 1
+            else:
+                low = mid + 1
+    return -1
+```
+
+
+![avatar](https://github.com/wbsky/LeetCode/blob/master/images/T33.jpeg)
+对于这个思路的解释，写在了图片中
+
+
