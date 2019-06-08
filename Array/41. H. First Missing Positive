@@ -1,0 +1,46 @@
+## 41. First Missing Positive
+题目链接: https://leetcode.com/problems/first-missing-positive/
+
+### 问题
+输入：无序整数数组arr
+
+输出：第一个未在arr中出现的正整数ans
+
+要求：时间复杂度为O(n)，使用恒定的额外空间
+
+### 解题思路
+第一想法是想对数组排序之后，然后再进行搜索即可。但是排序的时间复杂度为O(log n )不符合要求。
+
+自己想了一会没想出来O(n)的算法，借鉴了下优秀代码，对思路进行进一步分析。
+* 由于无法排序，故需要对数字出现的次数进行统计；由于额外建立空间存储出现次数不符合空间要求，故尝试**在数组中记录频次**。
+* 假设数组长度为length，ans一定会出现在区间[1, length + 1]中，故对不符合要求将其设置为0即可（否则在后续存储频次的过程中会出现问题）
+* 注意这里的技巧，同时保留数组原信息和频次信息
+
+
+### 代码
+
+```Python
+class Solution(object):
+    def firstMissingPositive(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        length = len(nums)
+        for i in range(length):
+            if nums[i] < 1 or nums[i] > length + 1:     
+                nums[i] = 0
+        nums.append(0)  # index = length
+        nums.append(0)  # index = length + 1
+
+        for i in range(0, length):
+            nums[nums[i] % (length + 2)] += (length + 2)
+        # nums[nums[i] % (length + 2)] 保持原信息的同时，存储频次信息
+
+        for i in range(1, length + 2):
+            if nums[i] // (length + 2) == 0:
+                return i
+```
+
+### 反思
+积累相关技巧经验~
