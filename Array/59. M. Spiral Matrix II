@@ -1,0 +1,54 @@
+## 59. Spiral Matrix II
+
+题目链接: https://leetcode.com/problems/spiral-matrix-ii/
+
+### 问题
+输入：整数n
+
+输出：旋转填入1 ~ n^2的构成的nxn的矩阵
+
+
+### 解题思路
+和Spiral Matrix的思路类似，依次选取四个方向进行打印即可
+
+### 代码
+
+```Python
+    def generateMatrix(self, n):
+        opt = []
+        for i in range(n):
+            opt.append([0 for k in range(n)])
+
+        dirs = [0, 1, 0, -1, 0]         # 将方向存储在数组中
+        i, j, num, d = 0, 0, 1, 0
+        while num <= n * n:
+            if 0 <= i < n and 0 <= j < n and opt[i][j] == 0:
+                opt[i][j] = num
+                i += dirs[d]
+                j += dirs[d + 1]
+                num += 1
+            else:
+                i -= dirs[d]
+                j -= dirs[d + 1]        # 撤销上一步的操作
+                d = (d + 1) % 4
+                i += dirs[d]            # 转换为新的方向
+                j += dirs[d + 1]
+        return opt
+```
+
+### 其他方案
+这个思路同样和Spiral Matrix的最短代码相似
+```Python
+def generateMatrix(self, n):
+    result = [[0 for i in range(n)] for j in range(n)]
+    coord = [[(i,j) for j in range(n)] for i in range(n)]
+    count = 1
+    
+    while coord:
+        for x, y in coord.pop(0):
+            result[x][y] = count
+            count += 1
+        coord = list(zip(*coord))[::-1] # 转换方向
+
+    return result
+```
