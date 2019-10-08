@@ -58,7 +58,7 @@ def binaryTreePaths(self, root):
     find_path(root, '')
     return ans
 ```
-#
+
 
 ### 题目2：236. Lowest Common Ancestor of a Binary Tree
 
