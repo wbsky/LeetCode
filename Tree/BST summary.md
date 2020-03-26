@@ -69,7 +69,7 @@ def deleteNode(self, root: TreeNode, key: int) -> TreeNode:
         else:
             cur = root.left            
             while cur.right:
-                cur = cur.right                             # 找到左子树的最右节
+                cur = cur.right                             # 找到左子树的最右节点
             root.val = cur.val                              # 进行替换
             root.left = self.deleteNode(root.left, cur.val)  # 递归对子树进行调整即可
         
