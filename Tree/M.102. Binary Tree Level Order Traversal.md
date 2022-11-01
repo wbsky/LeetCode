@@ -26,5 +26,28 @@ class Solution(object):
             
         return res
 
+# DFS
+class Solution(object):
+    def levelOrder(self, root):
+        def dfs(root, level):
+            if not root:
+                return 
+            
+            if len(res) > level:
+                res[level].append(root.val)
+            else:
+                res.append([])
+                res[level].append(root.val)
+            dfs(root.left, level + 1)
+            dfs(root.right, level + 1)
+            
+        if not root:
+            return []
+        
+        res = []
+        dfs(root, 0)
+        return res
+        
+        
 
 ```
